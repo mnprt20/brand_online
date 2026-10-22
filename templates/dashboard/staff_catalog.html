@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Store Catalogue{% endblock %}
+{% block content %}
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+    <div>
+        <h1 class="text-2xl font-bold">Product Catalogue</h1>
+        <p class="text-sm text-slate-500">Read-only view of {{ current_store.name }}'s products and categories.</p>
+    </div>
+    <a href="{% url 'dashboard:counter_order_add' %}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 w-fit">
+        + New Counter Order
+    </a>
+</div>
+
+<div class="flex flex-wrap gap-2 mb-6">
+    <a href="{% url 'dashboard:staff_catalog' %}" class="px-3 py-1.5 rounded-lg text-xs font-medium {% if not selected_category %}bg-indigo-600 text-white{% else %}bg-white border border-slate-200 text-slate-700 hover:bg-slate-50{% endif %}">
+        All Categories
+    </a>
+    {% for cat in categories %}
+    <a href="{% url 'dashboard:staff_catalog' %}?category={{ cat.pk }}" class="px-3 py-1.5 rounded-lg text-xs font-medium {% if selected_category == cat.pk|stringformat:'s' %}bg-indigo-600 text-white{% else %}bg-white border border-slate-200 text-slate-700 hover:bg-slate-50{% endif %}">
+        {{ cat.name }}
+    </a>
+    {% endfor %}
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 border-b border-slate-200 text-slate-500">
+            <tr>
+                <th class="px-6 py-3">Product</th>
+                <th class="px-6 py-3">Category</th>
+                <th class="px-6 py-3">Price</th>
+                <th class="px-6 py-3">Stock</th>
+                <th class="px-6 py-3">Availability</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+            {% for product in products %}
+            <tr>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-10 h-10 rounded object-cover border border-slate-200">
+                        {% endif %}
+                        <div>
+                            <p class="font-medium text-slate-900">{{ product.name }}</p>
+                            {% if product.description %}
+                            <p class="text-xs text-slate-500">{{ product.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-slate-600">{{ product.category.name|default:"Uncategorized" }}</td>
+                <td class="px-6 py-4 font-semibold">{{ product.price }}</td>
+                <td class="px-6 py-4 text-slate-600">{% if product.stock is not None %}{{ product.stock }}{% else %}Unlimited{% endif %}</td>
+                <td class="px-6 py-4">
+                    {% if product.is_available %}
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Available</span>
+                    {% else %}
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">Unavailable</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="px-6 py-8 text-center text-slate-500">No products found in this store.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

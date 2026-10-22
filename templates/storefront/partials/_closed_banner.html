@@ -1,0 +1,5 @@
+{% if store.has_online_features and not store.online_ordering_open %}
+<div class="bg-amber-100 border-b border-amber-300 text-amber-900 px-4 py-2.5 text-center text-sm font-medium" data-sf="closed-banner" data-banner="ordering-closed">
+    Online ordering is currently closed for {{ store.name }}. You can still browse the catalogue.
+</div>
+{% endif %}

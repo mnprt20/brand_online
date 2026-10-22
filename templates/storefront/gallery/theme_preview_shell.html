@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview: {{ theme.name }} — Storefront Theme Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col">
+    <!-- Top Preview Toolbar -->
+    <header class="bg-slate-950 border-b border-slate-800 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'theme_gallery' %}" class="text-xs font-semibold text-slate-400 hover:text-white">&larr; All Themes</a>
+                <div class="h-4 w-px bg-slate-800"></div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-sm font-bold text-white">{{ theme.name }}</h1>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                            {{ theme.min_plan|title }} Plan
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400 hidden sm:block">{{ theme.description }}</p>
+                </div>
+            </div>
+
+            <!-- Responsive Width Switcher (Desktop / Tablet / Mobile) -->
+            <div class="flex items-center bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs font-semibold" data-sf="viewport-switcher">
+                <a href="?viewport=desktop" data-viewport="desktop"
+                   class="px-3 py-1.5 rounded-md {% if viewport == 'desktop' %}bg-indigo-600 text-white{% else %}text-slate-400 hover:text-white{% endif %}">
+                    Desktop (100%)
+                </a>
+                <a href="?viewport=tablet" data-viewport="tablet"
+                   class="px-3 py-1.5 rounded-md {% if viewport == 'tablet' %}bg-indigo-600 text-white{% else %}text-slate-400 hover:text-white{% endif %}">
+                    Tablet (768px)
+                </a>
+                <a href="?viewport=mobile" data-viewport="mobile"
+                   class="px-3 py-1.5 rounded-md {% if viewport == 'mobile' %}bg-indigo-600 text-white{% else %}text-slate-400 hover:text-white{% endif %}">
+                    Mobile (375px)
+                </a>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <a href="{{ demo_url }}" target="_blank" class="text-xs text-slate-400 hover:text-white underline">
+                    Open Demo Frame
+                </a>
+                <a href="{% url 'theme_use' theme.key %}" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow">
+                    Use this theme
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Framed Live Demo Area -->
+    <main class="flex-1 flex justify-center bg-slate-900 p-4 overflow-auto">
+        <div id="preview-frame-wrapper"
+             class="bg-white rounded-xl overflow-hidden shadow-2xl border border-slate-700 transition-all duration-200 {% if viewport == 'mobile' %}w-[375px]{% elif viewport == 'tablet' %}w-[768px]{% else %}w-full{% endif %}"
+             style="min-height: calc(100vh - 5.5rem);">
+            <iframe src="{{ demo_url }}"
+                    title="{{ theme.name }} Live Demo"
+                    class="w-full h-full border-0"
+                    style="min-height: calc(100vh - 5.5rem);"></iframe>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "key": "verdant_market",
+  "name": "Verdant Market",
+  "description": "Botanical emerald greens, crisp organic cards, and fresh farm-to-table layout for grocers and franchises.",
+  "version": 1,
+  "tags": ["organic", "grocery", "fresh", "botanical"],
+  "min_plan": "franchise",
+  "palette": ["#047857", "#f0fdf4", "#a7f3d0", "#064e3b"],
+  "default_brand_color": "#047857",
+  "original_font": "DM Sans"
+}

@@ -1,0 +1,58 @@
+{% extends active_theme_base|default:"storefront/themes/classic/base.html" %}
+{% block title %}Register - {{ store.name }}{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto px-4 py-12">
+    <div class="mb-6">
+        <a href="{% url 'storefront:detail' store.slug %}" class="text-sm sf-brand-text hover:underline">&larr; Back to {{ store.name }}</a>
+        <h1 class="text-2xl font-bold mt-2">Create Customer Account</h1>
+        <p class="text-sm opacity-75">Register with {{ store.name }} to place online pickup or delivery orders.</p>
+    </div>
+
+    <form method="post" class="bg-white text-slate-900 p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        {% csrf_token %}
+        {% if next_url %}
+        <input type="hidden" name="next" value="{{ next_url }}">
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.name.id_for_label }}">Full Name</label>
+            <input type="text" name="name" id="{{ form.name.id_for_label }}" value="{{ form.name.value|default:'' }}" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+            {% for error in form.name.errors %}
+            <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.phone.id_for_label }}">Phone Number</label>
+            <input type="text" name="phone" id="{{ form.phone.id_for_label }}" value="{{ form.phone.value|default:'' }}" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+            {% for error in form.phone.errors %}
+            <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.password.id_for_label }}">Password</label>
+            <input type="password" name="password" id="{{ form.password.id_for_label }}" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+            {% for error in form.password.errors %}
+            <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="w-full py-2.5 sf-brand-bg rounded-lg text-sm font-medium hover:opacity-90">
+            Create Account
+        </button>
+    </form>
+
+    <p class="text-center text-sm opacity-80 mt-4">
+        Already have an account? <a href="{% url 'storefront:customer_login' store.slug %}{% if next_url %}?next={{ next_url }}{% endif %}" class="sf-brand-text font-medium hover:underline">Log in</a>
+    </p>
+</div>
+{% endblock %}

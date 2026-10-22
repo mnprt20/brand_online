@@ -1,0 +1,52 @@
+{% extends active_theme_base|default:"storefront/themes/classic/base.html" %}
+{% block title %}Checkout - {{ store.name }}{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-10">
+    <div class="mb-6 flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Checkout &mdash; {{ store.name }}</h1>
+        <a href="{% url 'storefront:detail' store.slug %}" class="text-sm sf-brand-text hover:underline">&larr; Back to Store</a>
+    </div>
+
+    <div class="sf-card-container p-6 mb-6">
+        <h2 class="font-semibold mb-3">Cart Items</h2>
+        {% if cart_items %}
+        <div class="divide-y divide-slate-200/50">
+            {% for item in cart_items %}
+            <div class="py-3 flex justify-between text-sm">
+                <span>{{ item.quantity }} &times; {{ item.product.name }} ({{ item.product.price }})</span>
+                <span class="font-semibold">{{ item.subtotal }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="border-t border-slate-200/60 pt-3 mt-3 flex justify-between font-bold text-lg">
+            <span>Total</span>
+            <span>{{ cart_total }}</span>
+        </div>
+        {% else %}
+        <p class="text-sm opacity-70">Your cart is empty.</p>
+        {% endif %}
+    </div>
+
+    <div class="sf-card-container p-6">
+        <h2 class="font-semibold mb-4">Customer Details</h2>
+        <form method="post" action="{% url 'storefront:checkout' store.slug %}" class="space-y-4">
+            {% csrf_token %}
+            {% if checkout_form.non_field_errors %}
+            <div class="text-sm text-red-600">{{ checkout_form.non_field_errors }}</div>
+            {% endif %}
+            {% for field in checkout_form %}
+            <div>
+                <label class="block text-sm font-medium mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="w-full py-2.5 sf-brand-bg rounded-lg font-medium hover:opacity-90">
+                Place Order
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

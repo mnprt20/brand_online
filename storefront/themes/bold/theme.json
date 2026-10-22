@@ -1,0 +1,11 @@
+{
+  "key": "bold",
+  "name": "Bold Street",
+  "description": "High-contrast dark mode with vibrant neon-fuchsia and orange energy for food and streetwear brands.",
+  "version": 1,
+  "tags": ["bold", "dark", "vibrant", "streetwear"],
+  "min_plan": "offline",
+  "palette": ["#d946ef", "#f97316", "#09090b", "#27272a"],
+  "default_brand_color": "#d946ef",
+  "original_font": "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+}

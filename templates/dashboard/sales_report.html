@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Sales Report{% endblock %}
+{% block content %}
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+    <div>
+        <h1 class="text-2xl font-bold">Franchise Sales Report</h1>
+        <p class="text-sm text-slate-500">
+            Showing sales performance from <span class="font-medium text-slate-700">{{ start_date_str }}</span> to <span class="font-medium text-slate-700">{{ end_date_str }}</span>.
+            Only <span class="font-medium">Paid</span> and <span class="font-medium">Completed</span> orders count toward revenue. Cancelled orders are excluded from all totals.
+        </p>
+    </div>
+
+    <form method="get" class="flex flex-wrap items-end gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+        <div>
+            <label for="start_date" class="block text-xs font-medium text-slate-600 mb-1">Start Date</label>
+            <input type="date" id="start_date" name="start_date" value="{{ start_date_str }}" class="px-3 py-1.5 border border-slate-300 rounded-lg text-sm">
+        </div>
+        <div>
+            <label for="end_date" class="block text-xs font-medium text-slate-600 mb-1">End Date</label>
+            <input type="date" id="end_date" name="end_date" value="{{ end_date_str }}" class="px-3 py-1.5 border border-slate-300 rounded-lg text-sm">
+        </div>
+        <button type="submit" class="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Apply Filter
+        </button>
+        <a href="{% url 'dashboard:sales_report' %}" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-sm hover:bg-slate-200">
+            Last 30 Days
+        </a>
+    </form>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-8">
+    <div class="px-6 py-4 border-b border-slate-200">
+        <h2 class="font-semibold text-base">Summary by Seller</h2>
+    </div>
+    <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+            <tr>
+                <th class="px-6 py-3">Seller</th>
+                <th class="px-6 py-3 text-right">Orders Count</th>
+                <th class="px-6 py-3 text-right">Pending (New / Confirmed)</th>
+                <th class="px-6 py-3 text-right">Paid / Completed</th>
+                <th class="px-6 py-3 text-right">Units Sold</th>
+                <th class="px-6 py-3 text-right">Revenue (Paid / Completed)</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+            {% for row in report_rows %}
+            <tr class="{% if row.is_direct %}bg-slate-50/60{% endif %}">
+                <td class="px-6 py-4 font-medium text-slate-900">
+                    {{ row.seller_name }}
+                    {% if row.membership and not row.membership.is_active %}
+                    <span class="ml-1 text-xs px-2 py-0.5 rounded bg-slate-200 text-slate-600">Inactive</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 text-right">{{ row.orders_count }}</td>
+                <td class="px-6 py-4 text-right text-amber-700 font-medium">{{ row.pending_count }}</td>
+                <td class="px-6 py-4 text-right text-emerald-700">{{ row.paid_completed_count }}</td>
+                <td class="px-6 py-4 text-right font-medium">{{ row.units_sold }}</td>
+                <td class="px-6 py-4 text-right font-bold text-slate-900">{{ row.revenue }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot class="bg-indigo-50/70 border-t-2 border-indigo-200 font-bold text-slate-900">
+            <tr>
+                <td class="px-6 py-4">Grand Total</td>
+                <td class="px-6 py-4 text-right">{{ grand_totals.orders_count }}</td>
+                <td class="px-6 py-4 text-right text-amber-800">{{ grand_totals.pending_count }}</td>
+                <td class="px-6 py-4 text-right text-emerald-800">{{ grand_totals.paid_completed_count }}</td>
+                <td class="px-6 py-4 text-right">{{ grand_totals.units_sold }}</td>
+                <td class="px-6 py-4 text-right text-indigo-700">{{ grand_totals.revenue }}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="space-y-6">
+    <h2 class="text-lg font-bold">Per-Product Breakdown by Seller</h2>
+    {% for row in report_rows %}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <h3 class="font-semibold text-sm text-slate-800">{{ row.seller_name }}</h3>
+            <span class="text-xs text-slate-500">
+                Units Sold: <strong class="text-slate-700">{{ row.units_sold }}</strong> |
+                Revenue: <strong class="text-slate-900">{{ row.revenue }}</strong>
+            </span>
+        </div>
+        <table class="w-full text-left text-sm">
+            <thead class="border-b border-slate-100 text-slate-500 text-xs uppercase">
+                <tr>
+                    <th class="px-6 py-2.5">Product Name</th>
+                    <th class="px-6 py-2.5 text-right">Units Sold</th>
+                    <th class="px-6 py-2.5 text-right">Revenue (Paid / Completed)</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for prod in row.products %}
+                <tr>
+                    <td class="px-6 py-3 font-medium text-slate-800">{{ prod.product_name }}</td>
+                    <td class="px-6 py-3 text-right">{{ prod.units_sold }}</td>
+                    <td class="px-6 py-3 text-right font-semibold">{{ prod.revenue }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="px-6 py-4 text-center text-xs text-slate-400">No products sold in this period.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

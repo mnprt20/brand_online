@@ -1,0 +1,19 @@
+{% extends "storefront/themes/noir_velvet/base.html" %}
+{% block title %}{{ store.name }} — Noir Velvet Boutique{% endblock %}
+{% block content %}
+<main class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <section class="lg:col-span-2">
+        {% include "storefront/partials/_category_filter.html" with all_label="All Editions" wrapper_class="flex flex-wrap gap-3 mb-8 border-b border-stone-800 pb-4" active_pill_class="px-4 py-1.5 text-xs uppercase tracking-widest font-bold sf-brand-bg text-white" inactive_pill_class="px-4 py-1.5 text-xs uppercase tracking-widest text-stone-400 border border-stone-800 bg-stone-900" %}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {% for product in products %}
+                {% include "storefront/themes/noir_velvet/product_card.html" %}
+            {% empty %}
+                <p class="text-stone-500 col-span-2 py-8">No available pieces in this collection.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% include "storefront/partials/_cart_sidebar.html" with title="Private Selection" aside_class="bg-stone-900 p-6 border border-stone-800 h-fit text-stone-100" heading_class="text-lg font-serif uppercase tracking-widest text-stone-100 mb-4" submit_class="w-full py-3 sf-brand-bg text-white text-xs uppercase tracking-widest font-bold" %}
+</main>
+{% endblock %}

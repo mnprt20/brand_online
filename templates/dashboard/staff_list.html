@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Staff Management{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+    <div>
+        <h1 class="text-2xl font-bold">Staff Management</h1>
+        <p class="text-sm text-slate-500">
+            Active Seats: <span class="font-semibold text-slate-800">{{ current_store.active_seat_count }} / {{ current_store.seat_limit }}</span>
+            (Plan includes {{ current_store.plan.max_users }} + {{ current_store.extra_seats }} extra seat{{ current_store.extra_seats|pluralize }})
+        </p>
+    </div>
+    <a href="{% url 'dashboard:staff_add' %}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+        + Add Staff Member
+    </a>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+            <tr>
+                <th class="px-6 py-3">Display Name</th>
+                <th class="px-6 py-3">Username</th>
+                <th class="px-6 py-3">Referral Code</th>
+                <th class="px-6 py-3">Status</th>
+                <th class="px-6 py-3 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+            {% for m in staff_memberships %}
+            <tr>
+                <td class="px-6 py-4 font-medium">{{ m.get_display_label }}</td>
+                <td class="px-6 py-4 text-slate-600">{{ m.user.username }}</td>
+                <td class="px-6 py-4 font-mono text-xs">
+                    <a href="/s/{{ current_store.slug }}/?ref={{ m.referral_code }}" target="_blank" class="text-indigo-600 hover:underline">
+                        {{ m.referral_code }}
+                    </a>
+                </td>
+                <td class="px-6 py-4">
+                    {% if m.is_active %}
+                    <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs font-medium">Active</span>
+                    {% else %}
+                    <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-xs font-medium">Inactive</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 text-right space-x-3">
+                    <a href="{% url 'dashboard:staff_qr' m.pk %}" class="text-indigo-600 hover:underline">Download QR</a>
+                    <a href="{% url 'dashboard:staff_reset_password' m.pk %}" class="text-slate-700 hover:underline">Reset Password</a>
+                    <form method="post" action="{% url 'dashboard:staff_toggle' m.pk %}" class="inline">
+                        {% csrf_token %}
+                        {% if m.is_active %}
+                        <input type="hidden" name="action" value="deactivate">
+                        <button type="submit" class="text-red-600 hover:underline">Deactivate</button>
+                        {% else %}
+                        <input type="hidden" name="action" value="activate">
+                        <button type="submit" class="text-emerald-600 hover:underline">Reactivate</button>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="px-6 py-8 text-center text-slate-500">No staff members added yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

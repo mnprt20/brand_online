@@ -1,0 +1,11 @@
+{
+  "key": "classic",
+  "name": "Classic Heritage",
+  "description": "Warm serif typography, heritage amber accents, and a welcoming neighbourhood storefront layout.",
+  "version": 1,
+  "tags": ["classic", "serif", "warm", "heritage"],
+  "min_plan": "offline",
+  "palette": ["#92400e", "#fffbeb", "#fef3c7", "#0f172a"],
+  "default_brand_color": "#92400e",
+  "original_font": "Georgia, Cambria, Times New Roman, serif"
+}

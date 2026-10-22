@@ -1,0 +1,23 @@
+{% extends "storefront/base_shell.html" %}
+{% block body_class %}bg-amber-50/40 text-slate-900 min-h-screen flex flex-col classic-theme-body{% endblock %}
+{% block header %}
+<header class="bg-white border-b border-amber-200 py-8 classic-header">
+    <div class="max-w-6xl mx-auto px-4 flex items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+            {% if store.logo %}
+            <img src="{{ store.logo.url }}" alt="{{ store.name }}" class="w-16 h-16 rounded-full object-cover border border-amber-300">
+            {% endif %}
+            <div>
+                <span class="text-xs uppercase tracking-widest font-semibold classic-accent-text">Classic Collection</span>
+                <h1 class="text-3xl font-serif font-bold text-slate-900">
+                    <a href="{% url 'storefront:detail' store.slug %}">{{ store.name }}</a>
+                </h1>
+                {% if store.description %}
+                <p class="text-sm text-slate-600 mt-1">{{ store.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% include "storefront/partials/_cart_link.html" with label="Cart" link_class="px-4 py-2 rounded-lg text-sm font-medium sf-brand-bg shadow-sm" %}
+    </div>
+</header>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "storefront/base_shell.html" %}
+{% block body_class %}bg-white text-neutral-900 min-h-screen font-sans flex flex-col minimal-theme-body{% endblock %}
+{% block header %}
+<header class="border-b border-neutral-200 py-10 minimal-header">
+    <div class="max-w-5xl mx-auto px-4 flex items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+            {% if store.logo %}
+            <img src="{{ store.logo.url }}" alt="{{ store.name }}" class="w-12 h-12 object-cover grayscale">
+            {% endif %}
+            <div>
+                <span class="text-xs uppercase tracking-widest text-neutral-400">Minimal Edition</span>
+                <h1 class="text-2xl font-light tracking-tight">
+                    <a href="{% url 'storefront:detail' store.slug %}">{{ store.name }}</a>
+                </h1>
+                {% if store.description %}
+                <p class="text-xs text-neutral-500 mt-1">{{ store.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% include "storefront/partials/_cart_link.html" with label="Bag" link_class="px-4 py-2 border border-neutral-900 text-neutral-900 text-xs uppercase tracking-wider hover:bg-neutral-900 hover:text-white transition" %}
+    </div>
+</header>
+{% endblock %}

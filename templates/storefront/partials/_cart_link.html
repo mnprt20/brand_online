@@ -1,0 +1,9 @@
+{% if is_demo %}
+<button type="button" disabled data-sf="cart-link" class="{{ link_class|default:'px-4 py-2 rounded-lg text-sm font-medium sf-brand-bg opacity-80 cursor-not-allowed' }}" title="Cart disabled in demo preview">
+    {{ label|default:"Cart" }} ({{ cart_count|default:0 }}) &bull; {{ cart_total|default:"0.00" }}
+</button>
+{% else %}
+<a href="{% url 'storefront:checkout' store.slug %}" data-sf="cart-link" class="{{ link_class|default:'px-4 py-2 rounded-lg text-sm font-medium sf-brand-bg' }}">
+    {{ label|default:"Cart" }} ({{ cart_count|default:0 }}) &bull; {{ cart_total|default:"0.00" }}
+</a>
+{% endif %}

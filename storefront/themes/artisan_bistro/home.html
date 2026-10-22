@@ -1,0 +1,19 @@
+{% extends "storefront/themes/artisan_bistro/base.html" %}
+{% block title %}{{ store.name }} — Artisan Bistro Menu{% endblock %}
+{% block content %}
+<main class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <section class="lg:col-span-2">
+        {% include "storefront/partials/_category_filter.html" with all_label="Full Menu" wrapper_class="flex flex-wrap gap-2 mb-8" active_pill_class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider sf-brand-bg" inactive_pill_class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider bg-white border border-orange-200 text-stone-700" %}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {% for product in products %}
+                {% include "storefront/themes/artisan_bistro/product_card.html" %}
+            {% empty %}
+                <p class="text-stone-500 col-span-2 py-8">No available dishes or items found.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% include "storefront/partials/_cart_sidebar.html" with title="Your Table Ticket" aside_class="bg-white p-6 rounded-2xl border border-orange-200 shadow-sm h-fit" heading_class="text-xl font-serif font-bold mb-4" %}
+</main>
+{% endblock %}

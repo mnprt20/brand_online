@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Overview{% endblock %}
+{% block content %}
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+    <div>
+        <h1 class="text-2xl font-bold">{{ current_store.name }} {% if is_store_staff %}— Staff Dashboard{% else %}Dashboard{% endif %}</h1>
+        <p class="text-sm text-slate-500">
+            Plan: <span class="font-medium text-slate-700">{{ current_store.plan.name }}</span> |
+            Template: <span class="font-medium text-slate-700">{{ current_store.get_template_key_display }}</span> |
+            Public URL: <a href="/s/{{ current_store.slug }}/" class="text-indigo-600 underline">/s/{{ current_store.slug }}/</a>
+        </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+        {% if is_store_owner %}
+        <a href="{% url 'dashboard:store_qr' %}" download="{{ current_store.slug }}-qr.png" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Download QR
+        </a>
+        <a href="{% url 'dashboard:product_add' %}" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">
+            + Add Product
+        </a>
+        <a href="{% url 'dashboard:counter_order_add' %}" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">
+            + Counter Order
+        </a>
+        {% elif is_store_staff %}
+        <a href="{% url 'dashboard:counter_order_add' %}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+            + New Counter Order
+        </a>
+        {% if current_store.has_franchise_features %}
+        <a href="{% url 'dashboard:my_qr' %}" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">
+            My QR
+        </a>
+        {% endif %}
+        <a href="{% url 'dashboard:staff_catalog' %}" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Browse Catalogue
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-sm text-slate-500">Categories</p>
+        <p class="text-3xl font-bold mt-1">{{ category_count }}</p>
+        {% if is_store_owner %}
+        <a href="{% url 'dashboard:category_list' %}" class="text-xs text-indigo-600 hover:underline mt-2 inline-block">Manage categories &rarr;</a>
+        {% else %}
+        <a href="{% url 'dashboard:staff_catalog' %}" class="text-xs text-indigo-600 hover:underline mt-2 inline-block">Browse catalogue &rarr;</a>
+        {% endif %}
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-sm text-slate-500">Products</p>
+        <p class="text-3xl font-bold mt-1">{{ product_count }}</p>
+        {% if is_store_owner %}
+        <a href="{% url 'dashboard:product_list' %}" class="text-xs text-indigo-600 hover:underline mt-2 inline-block">Manage products &rarr;</a>
+        {% else %}
+        <a href="{% url 'dashboard:staff_catalog' %}" class="text-xs text-indigo-600 hover:underline mt-2 inline-block">View products &rarr;</a>
+        {% endif %}
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-sm text-slate-500">{% if is_store_staff %}My Orders{% else %}Orders{% endif %}</p>
+        <p class="text-3xl font-bold mt-1">{{ order_count }}</p>
+        <a href="{% url 'dashboard:order_list' %}" class="text-xs text-indigo-600 hover:underline mt-2 inline-block">View {% if is_store_staff %}my{% else %}all{% endif %} orders &rarr;</a>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="font-semibold">{% if is_store_staff %}My Recent Orders{% else %}Recent Orders{% endif %}</h2>
+        <a href="{% url 'dashboard:order_list' %}" class="text-sm text-indigo-600 hover:underline">All Orders</a>
+    </div>
+    <div class="divide-y divide-slate-100">
+        {% for order in recent_orders %}
+        <div class="px-6 py-4 flex items-center justify-between">
+            <div>
+                <a href="{% url 'dashboard:order_detail' order.pk %}" class="font-medium text-indigo-600 hover:underline">{{ order.order_number }}</a>
+                <p class="text-xs text-slate-500">{{ order.customer_name }} ({{ order.customer_phone }})</p>
+            </div>
+            <div class="text-right">
+                <p class="font-semibold">{{ order.total }}</p>
+                <span class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-700">{{ order.get_status_display }}</span>
+            </div>
+        </div>
+        {% empty %}
+        <p class="px-6 py-8 text-sm text-slate-500 text-center">No orders placed yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

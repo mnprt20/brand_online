@@ -1,0 +1,18 @@
+{% if is_demo %}
+<form method="post" action="#" data-sf="add-to-cart" class="{{ form_class|default:'flex items-center space-x-2' }}">
+    <input type="hidden" name="product_id" value="{{ product.pk }}">
+    <input type="number" name="quantity" value="1" min="1" disabled class="{{ input_class|default:'w-16 px-2 py-1 border border-slate-300 rounded text-sm opacity-60' }}">
+    <button type="button" disabled class="{{ button_class|default:'px-3 py-1.5 rounded text-sm font-semibold sf-brand-bg opacity-60 cursor-not-allowed' }}" title="Ordering disabled in demo preview">
+        {{ button_label|default:"Add" }}
+    </button>
+</form>
+{% else %}
+<form method="post" action="{% url 'storefront:cart_add' store.slug %}" data-sf="add-to-cart" class="{{ form_class|default:'flex items-center space-x-2' }}">
+    {% csrf_token %}
+    <input type="hidden" name="product_id" value="{{ product.pk }}">
+    <input type="number" name="quantity" value="1" min="1" class="{{ input_class|default:'w-16 px-2 py-1 border border-slate-300 rounded text-sm' }}">
+    <button type="submit" class="{{ button_class|default:'px-3 py-1.5 rounded text-sm font-semibold sf-brand-bg hover:opacity-90' }}">
+        {{ button_label|default:"Add" }}
+    </button>
+</form>
+{% endif %}

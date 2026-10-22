@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}{% if is_store_staff %}My Orders{% else %}Orders{% endif %}{% endblock %}
+{% block content %}
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+    <div>
+        <h1 class="text-2xl font-bold">{% if is_store_staff %}My Orders{% else %}Orders{% endif %}</h1>
+        <p class="text-sm text-slate-500">
+            {% if is_store_staff %}Showing orders attributed to your account.{% else %}All orders placed in {{ current_store.name }}.{% endif %}
+        </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+        <form method="get" class="flex flex-wrap items-center gap-2">
+            {% if is_store_owner %}
+            <label for="staff-filter" class="text-xs font-medium text-slate-600">Sold by:</label>
+            <select id="staff-filter" name="staff" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-700">
+                <option value="">All Sellers</option>
+                <option value="direct" {% if selected_staff == 'direct' %}selected{% endif %}>Owner/Direct</option>
+                {% for sm in staff_memberships %}
+                <option value="{{ sm.user_id }}" {% if selected_staff == sm.user_id|stringformat:'s' %}selected{% endif %}>
+                    {{ sm.get_display_label }}
+                </option>
+                {% endfor %}
+            </select>
+            {% endif %}
+
+            <label for="status-filter" class="text-xs font-medium text-slate-600">Status:</label>
+            <select id="status-filter" name="status" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-700">
+                <option value="">All Statuses</option>
+                {% for code, label in status_choices %}
+                <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="fulfilment-filter" class="text-xs font-medium text-slate-600">Fulfilment:</label>
+            <select id="fulfilment-filter" name="fulfilment" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-700">
+                <option value="">All Types</option>
+                {% for code, label in fulfilment_choices %}
+                <option value="{{ code }}" {% if selected_fulfilment == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-medium hover:bg-slate-900">
+                Filter
+            </button>
+            {% if selected_staff or selected_status or selected_fulfilment %}
+            <a href="{% url 'dashboard:order_list' %}" class="text-xs text-slate-500 hover:underline">Reset</a>
+            {% endif %}
+        </form>
+        <a href="{% url 'dashboard:counter_order_add' %}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+            + Counter Order
+        </a>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+            <tr>
+                <th class="px-6 py-3">Order #</th>
+                <th class="px-6 py-3">Customer</th>
+                <th class="px-6 py-3">Phone</th>
+                <th class="px-6 py-3">Fulfilment</th>
+                {% if is_store_owner %}
+                <th class="px-6 py-3">Sold by</th>
+                {% endif %}
+                <th class="px-6 py-3">Total</th>
+                <th class="px-6 py-3">Status</th>
+                <th class="px-6 py-3">Payment</th>
+                <th class="px-6 py-3 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+            {% for order in orders %}
+            <tr>
+                <td class="px-6 py-4 font-medium">
+                    <a href="{% url 'dashboard:order_detail' order.pk %}" class="text-indigo-600 hover:underline">{{ order.order_number }}</a>
+                </td>
+                <td class="px-6 py-4">
+                    <div>{{ order.customer_name }}</div>
+                    {% if order.delivery_address_text %}
+                    <div class="text-xs text-slate-400 truncate max-w-xs">{{ order.delivery_address_text }}</div>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4">{{ order.customer_phone }}</td>
+                <td class="px-6 py-4">
+                    {% if order.fulfilment_type %}
+                    <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-xs font-semibold uppercase">{{ order.get_fulfilment_type_display }}</span>
+                    {% else %}
+                    <span class="text-xs text-slate-400">QR / Counter</span>
+                    {% endif %}
+                </td>
+                {% if is_store_owner %}
+                <td class="px-6 py-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium {% if order.sold_by_label == 'Owner/Direct' %}bg-slate-100 text-slate-700{% else %}bg-indigo-50 text-indigo-700{% endif %}">
+                        {{ order.sold_by_label }}
+                    </span>
+                </td>
+                {% endif %}
+                <td class="px-6 py-4 font-semibold">{{ order.total }}</td>
+                <td class="px-6 py-4">{{ order.get_status_display }}</td>
+                <td class="px-6 py-4">
+                    <div>{{ order.get_payment_status_display }}</div>
+                    {% if order.payment_reference %}
+                    <div class="text-[11px] font-mono text-slate-500">Ref: {{ order.payment_reference }}</div>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 text-right space-x-3">
+                    <a href="{% url 'dashboard:order_detail' order.pk %}" class="text-indigo-600 hover:underline">View / Update</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if is_store_owner %}9{% else %}8{% endif %}" class="px-6 py-8 text-center text-slate-500">No orders yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

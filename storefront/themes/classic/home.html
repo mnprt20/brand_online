@@ -1,0 +1,19 @@
+{% extends "storefront/themes/classic/base.html" %}
+{% block title %}{{ store.name }} - Classic Storefront{% endblock %}
+{% block content %}
+<main class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <section class="lg:col-span-2">
+        {% include "storefront/partials/_category_filter.html" with all_label="All Products" active_pill_class="px-3.5 py-1.5 rounded-full text-sm font-medium sf-brand-bg" inactive_pill_class="px-3.5 py-1.5 rounded-full text-sm bg-white border border-amber-200 text-slate-700" %}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {% for product in products %}
+                {% include "storefront/themes/classic/product_card.html" %}
+            {% empty %}
+                <p class="text-slate-500 col-span-2 py-8">No available products found.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% include "storefront/partials/_cart_sidebar.html" with aside_class="bg-white p-6 rounded-xl border border-amber-200 shadow-sm h-fit" heading_class="text-xl font-serif font-bold mb-4" %}
+</main>
+{% endblock %}

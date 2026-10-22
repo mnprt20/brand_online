@@ -1,0 +1,49 @@
+{% extends active_theme_base|default:"storefront/themes/classic/base.html" %}
+{% block title %}{% if is_edit %}Edit Address{% else %}Add Address{% endif %} - {{ store.name }}{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-10">
+    <div class="mb-6">
+        <a href="{% url 'storefront:customer_account' store.slug %}" class="text-sm sf-brand-text hover:underline">&larr; Back to Account</a>
+        <h1 class="text-2xl font-bold mt-2">{% if is_edit %}Edit Address{% else %}Add Delivery Address{% endif %}</h1>
+    </div>
+
+    <form method="post" class="bg-white text-slate-900 p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.label.id_for_label }}">Label (e.g. Home, Work)</label>
+            <input type="text" name="label" id="{{ form.label.id_for_label }}" value="{{ form.label.value|default:'Home' }}" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+            {% for error in form.label.errors %}
+            <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.address_line.id_for_label }}">Address Line</label>
+            <textarea name="address_line" id="{{ form.address_line.id_for_label }}" rows="2" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">{{ form.address_line.value|default:'' }}</textarea>
+            {% for error in form.address_line.errors %}
+            <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.landmark.id_for_label }}">Landmark (Optional)</label>
+                <input type="text" name="landmark" id="{{ form.landmark.id_for_label }}" value="{{ form.landmark.value|default:'' }}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.pincode.id_for_label }}">Pincode</label>
+                <input type="text" name="pincode" id="{{ form.pincode.id_for_label }}" value="{{ form.pincode.value|default:'' }}" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                {% for error in form.pincode.errors %}
+                <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" name="is_default" id="{{ form.is_default.id_for_label }}" {% if form.is_default.value %}checked{% endif %} class="rounded border-slate-300">
+            <label for="{{ form.is_default.id_for_label }}" class="text-sm text-slate-700">Set as default address</label>
+        </div>
+        <div class="flex justify-end gap-3 pt-2">
+            <a href="{% url 'storefront:customer_account' store.slug %}" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">Cancel</a>
+            <button type="submit" class="px-5 py-2 sf-brand-bg rounded-lg text-sm font-medium hover:opacity-90">Save Address</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

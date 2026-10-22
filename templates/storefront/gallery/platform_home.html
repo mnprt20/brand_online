@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Catalogue SaaS — Multi-Tenant Storefront & Theme Platform{% endblock %}
+{% block content %}
+<div class="space-y-16 py-4">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-8 sm:p-14 shadow-xl">
+        <div class="max-w-3xl">
+            <span class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold uppercase tracking-widest mb-4">
+                Multi-Tenant Storefront SaaS
+            </span>
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                Launch your QR &amp; Online Storefront with handcrafted themes.
+            </h1>
+            <p class="text-lg text-slate-300 mt-4 leading-relaxed">
+                From instant counter QR menus to full progressive web apps with pickup, delivery, staff attribution, and live customizable storefront themes.
+            </p>
+            <div class="mt-8 flex flex-wrap items-center gap-4">
+                {% if user.is_authenticated %}
+                <a href="{% url 'dashboard:home' %}" class="px-6 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-sm shadow-lg">
+                    Go to Dashboard &rarr;
+                </a>
+                <a href="{% url 'dashboard:appearance' %}" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20">
+                    Customize Appearance
+                </a>
+                {% else %}
+                <a href="{% url 'accounts:signup' %}" class="px-6 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-sm shadow-lg">
+                    Create Your Store
+                </a>
+                <a href="{% url 'accounts:login' %}" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20">
+                    Owner / Staff Login
+                </a>
+                {% endif %}
+                <a href="{% url 'theme_gallery' %}" class="px-6 py-3 rounded-xl text-indigo-200 hover:text-white font-semibold text-sm underline">
+                    Browse All Themes ({{ themes|length }})
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Theme Showcase Section -->
+    <section>
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-indigo-600">Storefront Theme System</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-1">Explore Storefront Themes</h2>
+                <p class="text-sm text-slate-600 mt-1">Preview any theme with sample products or apply it directly to your store.</p>
+            </div>
+            <a href="{% url 'theme_gallery' %}" class="text-sm font-bold text-indigo-600 hover:underline">
+                View Full Theme Gallery &rarr;
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for theme in themes %}
+                {% include "storefront/gallery/_theme_card.html" %}
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+<div class="py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6 minimal-product-row">
+    <div class="flex items-center space-x-4">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-20 h-20 object-cover bg-neutral-100">
+        {% endif %}
+        <div>
+            {% if product.category %}
+            <span class="text-[11px] uppercase tracking-wider text-neutral-400 block">{{ product.category.name }}</span>
+            {% endif %}
+            <h2 class="text-base font-medium text-neutral-900">{{ product.name }}</h2>
+            {% if product.description %}
+            <p class="text-xs text-neutral-500 mt-1">{{ product.description }}</p>
+            {% endif %}
+            <p class="text-sm font-semibold mt-2 minimal-price">{{ product.price }}</p>
+        </div>
+    </div>
+    {% include "storefront/partials/_add_to_cart_form.html" with input_class="w-14 px-2 py-1 border border-neutral-300 text-xs" button_class="px-3.5 py-1.5 sf-brand-bg text-white text-xs uppercase tracking-wider" button_label="Add" %}
+</div>

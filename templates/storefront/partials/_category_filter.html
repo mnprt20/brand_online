@@ -1,0 +1,25 @@
+<div class="{{ wrapper_class|default:'flex flex-wrap gap-2 mb-6' }}" data-sf="category-filter">
+    {% if is_demo %}
+    <a href="?category="
+       class="{{ active_pill_class|default:'px-3.5 py-1.5 rounded-full text-sm font-medium sf-brand-bg' }}">
+        {{ all_label|default:"All Products" }}
+    </a>
+    {% for cat in categories %}
+    <a href="?category={{ cat.pk }}"
+       class="{{ inactive_pill_class|default:'px-3.5 py-1.5 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-700' }}">
+        {{ cat.name }}
+    </a>
+    {% endfor %}
+    {% else %}
+    <a href="{% if base_filter_url %}{{ base_filter_url }}{% else %}{% url 'storefront:detail' store.slug %}{% endif %}"
+       class="{% if not selected_category %}{{ active_pill_class|default:'px-3.5 py-1.5 rounded-full text-sm font-medium sf-brand-bg' }}{% else %}{{ inactive_pill_class|default:'px-3.5 py-1.5 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-700' }}{% endif %}">
+        {{ all_label|default:"All Products" }}
+    </a>
+    {% for cat in categories %}
+    <a href="{% if base_filter_url %}{{ base_filter_url }}{% else %}{% url 'storefront:detail' store.slug %}{% endif %}?category={{ cat.pk }}"
+       class="{% if selected_category and selected_category.pk == cat.pk %}{{ active_pill_class|default:'px-3.5 py-1.5 rounded-full text-sm font-medium sf-brand-bg' }}{% else %}{{ inactive_pill_class|default:'px-3.5 py-1.5 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-700' }}{% endif %}">
+        {{ cat.name }}
+    </a>
+    {% endfor %}
+    {% endif %}
+</div>

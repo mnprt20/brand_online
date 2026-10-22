@@ -1,0 +1,11 @@
+{
+  "key": "minimal",
+  "name": "Minimal Studio",
+  "description": "Clean monochrome lines, generous whitespace, and understated editorial product rows.",
+  "version": 1,
+  "tags": ["minimal", "clean", "monochrome", "modern"],
+  "min_plan": "offline",
+  "palette": ["#171717", "#ffffff", "#f5f5f5", "#737373"],
+  "default_brand_color": "#171717",
+  "original_font": "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif"
+}

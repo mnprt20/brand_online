@@ -1,0 +1,18 @@
+<div class="noir-card bg-stone-900/90 border border-stone-800 p-6 flex flex-col justify-between">
+    <div>
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-52 object-cover mb-4 border border-stone-800">
+        {% endif %}
+        {% if product.category %}
+        <span class="text-[10px] uppercase tracking-[0.2em] noir-gold-text font-semibold block">{{ product.category.name }}</span>
+        {% endif %}
+        <h2 class="text-xl font-serif font-semibold text-stone-100 mt-1">{{ product.name }}</h2>
+        {% if product.description %}
+        <p class="text-sm text-stone-400 mt-2 leading-relaxed">{{ product.description }}</p>
+        {% endif %}
+    </div>
+    <div class="mt-5 pt-4 border-t border-stone-800 flex items-center justify-between">
+        <span class="text-lg font-serif font-bold noir-gold-text">{{ product.price }}</span>
+        {% include "storefront/partials/_add_to_cart_form.html" with input_class="w-16 px-2 py-1 bg-stone-950 border border-stone-700 text-stone-100 text-xs" button_class="px-4 py-1.5 sf-brand-bg text-white text-xs uppercase tracking-widest font-semibold hover:opacity-90" button_label="Select" %}
+    </div>
+</div>

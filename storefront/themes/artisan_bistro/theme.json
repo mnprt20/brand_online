@@ -1,0 +1,11 @@
+{
+  "key": "artisan_bistro",
+  "name": "Artisan Bistro",
+  "description": "Warm espresso and terracotta tones with editorial serif headings crafted for bakeries, cafes, and bistros.",
+  "version": 1,
+  "tags": ["bistro", "bakery", "cafe", "warm"],
+  "min_plan": "offline",
+  "palette": ["#7c2d12", "#faf5ef", "#fed7aa", "#291d12"],
+  "default_brand_color": "#7c2d12",
+  "original_font": "Playfair Display"
+}

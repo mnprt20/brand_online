@@ -1,0 +1,23 @@
+/* Verdant Market Theme (Converted from GPT-5 Design; DM Sans -> system sans-serif stack) */
+[data-theme="verdant_market"] {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0fdf4;
+    color: #064e3b;
+}
+
+[data-theme="verdant_market"] .verdant-header {
+    background-color: #ffffff;
+}
+
+[data-theme="verdant_market"] .verdant-price {
+    color: var(--brand-color, #047857);
+}
+
+[data-theme="verdant_market"] .verdant-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-theme="verdant_market"] .verdant-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(4, 120, 87, 0.1);
+}

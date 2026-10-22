@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Theme Gallery — Storefront Themes{% endblock %}
+{% block content %}
+<div class="space-y-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-6">
+        <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-indigo-600">Theme Directory</span>
+            <h1 class="text-3xl font-extrabold text-slate-900 mt-1">Storefront Theme Gallery</h1>
+            <p class="text-sm text-slate-600 mt-1">Test every theme live across desktop, tablet, and mobile viewports.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs font-semibold">
+            <a href="{% url 'theme_gallery' %}" class="px-3.5 py-2 rounded-lg {% if not selected_plan %}bg-indigo-600 text-white{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">
+                All Themes
+            </a>
+            <a href="{% url 'theme_gallery' %}?plan=offline" class="px-3.5 py-2 rounded-lg {% if selected_plan == 'offline' %}bg-indigo-600 text-white{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">
+                Offline Plan
+            </a>
+            <a href="{% url 'theme_gallery' %}?plan=franchise" class="px-3.5 py-2 rounded-lg {% if selected_plan == 'franchise' %}bg-indigo-600 text-white{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">
+                Franchise Plan
+            </a>
+            <a href="{% url 'theme_gallery' %}?plan=online" class="px-3.5 py-2 rounded-lg {% if selected_plan == 'online' %}bg-indigo-600 text-white{% else %}bg-white border border-slate-200 text-slate-700{% endif %}">
+                Online Plan
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for theme in themes %}
+            {% include "storefront/gallery/_theme_card.html" %}
+        {% empty %}
+            <p class="text-slate-500 col-span-3 py-8 text-center">No themes match the selected filter.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

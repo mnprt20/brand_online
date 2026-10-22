@@ -1,0 +1,13 @@
+/* Minimal Studio Theme Styles */
+[data-theme="minimal"] {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.01em;
+}
+
+[data-theme="minimal"] .minimal-price {
+    color: var(--brand-color, #171717);
+}
+
+[data-theme="minimal"] .minimal-product-row {
+    transition: background-color 0.15s ease;
+}

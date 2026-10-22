@@ -1,0 +1,28 @@
+/* Noir Velvet Theme (Converted from GPT-5 Design; Cormorant Garamond -> system serif stack) */
+[data-theme="noir_velvet"] {
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    background-color: #0c0a09;
+    color: #fafaf9;
+}
+
+[data-theme="noir_velvet"] .noir-header {
+    background: radial-gradient(circle at top, #1c1917 0%, #0c0a09 100%);
+}
+
+[data-theme="noir_velvet"] .noir-gold-text {
+    color: var(--brand-color, #ca8a04);
+}
+
+[data-theme="noir_velvet"] .noir-card {
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+[data-theme="noir_velvet"] .noir-card:hover {
+    border-color: var(--brand-color, #ca8a04);
+    transform: translateY(-2px);
+}
+
+[data-theme="noir_velvet"] aside input,
+[data-theme="noir_velvet"] aside textarea {
+    color: #0f172a;
+}

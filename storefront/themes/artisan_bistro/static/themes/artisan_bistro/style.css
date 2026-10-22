@@ -1,0 +1,24 @@
+/* Artisan Bistro Theme (Converted from GPT-5 Design; Playfair Display -> system serif stack) */
+[data-theme="artisan_bistro"] {
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    background-color: #faf5ef;
+    color: #291d12;
+}
+
+[data-theme="artisan_bistro"] .bistro-header {
+    background: linear-gradient(180deg, #fffdf9 0%, #faf5ef 100%);
+}
+
+[data-theme="artisan_bistro"] .bistro-eyebrow,
+[data-theme="artisan_bistro"] .bistro-price {
+    color: var(--brand-color, #7c2d12);
+}
+
+[data-theme="artisan_bistro"] .bistro-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-theme="artisan_bistro"] .bistro-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(124, 45, 18, 0.08);
+}

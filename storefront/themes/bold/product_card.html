@@ -1,0 +1,20 @@
+<div class="bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden flex flex-col bold-product-card">
+    {% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-52 object-cover">
+    {% endif %}
+    <div class="p-5 flex-1 flex flex-col justify-between">
+        <div>
+            {% if product.category %}
+            <span class="text-[11px] uppercase font-black tracking-wider text-fuchsia-400">{{ product.category.name }}</span>
+            {% endif %}
+            <h2 class="text-xl font-extrabold text-white mt-0.5">{{ product.name }}</h2>
+            {% if product.description %}
+            <p class="text-sm text-zinc-400 mt-1">{{ product.description }}</p>
+            {% endif %}
+        </div>
+        <div class="mt-4 pt-4 border-t border-zinc-800 flex items-center justify-between">
+            <span class="text-xl font-black text-orange-400">{{ product.price }}</span>
+            {% include "storefront/partials/_add_to_cart_form.html" with input_class="w-16 px-2 py-1 bg-zinc-800 border border-zinc-700 rounded text-sm text-white" button_class="px-4 py-1.5 sf-brand-bg text-white font-bold text-sm rounded-lg hover:opacity-90" button_label="Add" %}
+        </div>
+    </div>
+</div>

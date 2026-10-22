@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}My Personal Storefront QR{% endblock %}
+{% block content %}
+<div class="max-w-xl mx-auto bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-center">
+    <h1 class="text-2xl font-bold mb-2">My Personal Storefront QR</h1>
+    <p class="text-sm text-slate-500 mb-6">
+        Orders placed by customers who scan this QR code or visit your referral link are automatically attributed to <span class="font-semibold text-slate-700">{{ current_membership.get_display_label }}</span>.
+    </p>
+
+    <div class="inline-block p-4 bg-white border border-slate-200 rounded-xl shadow-sm mb-6">
+        <img src="{% url 'dashboard:my_qr_download' %}" alt="Personal Referral QR Code" class="w-56 h-56 mx-auto">
+    </div>
+
+    <div class="mb-6 text-left bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Your Referral Link</p>
+        <p class="text-sm font-mono break-all text-indigo-700">{{ personal_storefront_url }}</p>
+        <p class="text-xs text-slate-500 mt-2">Referral Code: <span class="font-mono font-semibold text-slate-700">{{ current_membership.referral_code }}</span></p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href="{% url 'dashboard:my_qr_download' %}" download="{{ current_store.slug }}-{{ user.username }}-qr.png" class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Download My QR (PNG)
+        </a>
+        <a href="{{ personal_storefront_path }}" target="_blank" class="px-4 py-2.5 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Open Referral Link &rarr;
+        </a>
+    </div>
+</div>
+{% endblock %}

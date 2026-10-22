@@ -1,0 +1,18 @@
+/* Bold Street Theme Styles */
+[data-theme="bold"] .bold-hero-header {
+    background: linear-gradient(135deg, var(--brand-color, #d946ef) 0%, #f97316 100%);
+}
+
+[data-theme="bold"] .bold-product-card {
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+[data-theme="bold"] .bold-product-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--brand-color, #d946ef);
+}
+
+[data-theme="bold"] aside input,
+[data-theme="bold"] aside textarea {
+    color: #0f172a;
+}

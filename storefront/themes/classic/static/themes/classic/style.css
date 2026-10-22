@@ -1,0 +1,21 @@
+/* Classic Heritage Theme Styles */
+[data-theme="classic"] {
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+[data-theme="classic"] .classic-accent-text {
+    color: var(--brand-color, #92400e);
+}
+
+[data-theme="classic"] .classic-header {
+    border-bottom-color: rgba(146, 64, 14, 0.2);
+}
+
+[data-theme="classic"] .classic-product-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-theme="classic"] .classic-product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(146, 64, 14, 0.08);
+}

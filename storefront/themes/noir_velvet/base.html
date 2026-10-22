@@ -1,0 +1,23 @@
+{% extends "storefront/base_shell.html" %}
+{% block body_class %}bg-stone-950 text-stone-100 min-h-screen flex flex-col noir-theme-body{% endblock %}
+{% block header %}
+<header class="noir-header py-11 border-b border-stone-800">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+            {% if store.logo %}
+            <img src="{{ store.logo.url }}" alt="{{ store.name }}" class="w-16 h-16 rounded-full object-cover ring-2 ring-yellow-600/60">
+            {% endif %}
+            <div>
+                <span class="text-[11px] uppercase tracking-[0.25em] noir-gold-text font-semibold">Maison Collection</span>
+                <h1 class="text-3xl sm:text-4xl font-serif font-semibold tracking-wide text-stone-50 mt-1">
+                    <a href="{% url 'storefront:detail' store.slug %}">{{ store.name }}</a>
+                </h1>
+                {% if store.description %}
+                <p class="text-sm text-stone-400 mt-1">{{ store.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% include "storefront/partials/_cart_link.html" with label="Selection" link_class="px-5 py-2.5 rounded-none border border-yellow-600/70 sf-brand-bg text-xs uppercase tracking-widest font-bold" %}
+    </div>
+</header>
+{% endblock %}

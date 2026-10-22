@@ -1,0 +1,24 @@
+<article class="bistro-card bg-white rounded-2xl border border-orange-200/70 shadow-sm overflow-hidden flex flex-col justify-between">
+    <div>
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+        {% endif %}
+        <div class="p-5">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    {% if product.category %}
+                    <span class="text-[11px] uppercase tracking-widest font-bold bistro-eyebrow block">{{ product.category.name }}</span>
+                    {% endif %}
+                    <h2 class="text-lg font-serif font-bold mt-0.5">{{ product.name }}</h2>
+                </div>
+                <span class="text-lg font-serif font-bold bistro-price whitespace-nowrap">{{ product.price }}</span>
+            </div>
+            {% if product.description %}
+            <p class="text-sm text-stone-600 mt-2 leading-relaxed">{{ product.description }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="px-5 pb-5 pt-3 border-t border-orange-100/80 flex items-center justify-end">
+        {% include "storefront/partials/_add_to_cart_form.html" with input_class="w-16 px-2.5 py-1 border border-stone-300 rounded-lg text-sm" button_class="px-4 py-1.5 rounded-lg text-sm font-bold sf-brand-bg hover:opacity-90" button_label="Add to Order" %}
+    </div>
+</article>

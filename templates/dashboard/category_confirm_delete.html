@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Delete Category{% endblock %}
+{% block content %}
+<div class="max-w-md bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+    <h1 class="text-xl font-bold mb-2">Delete Category</h1>
+    <p class="text-sm text-slate-600 mb-6">Are you sure you want to delete "{{ object.name }}"?</p>
+    <form method="post" class="flex space-x-3">
+        {% csrf_token %}
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium">Confirm Delete</button>
+        <a href="{% url 'dashboard:category_list' %}" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if is_owner_preview or is_demo %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+    {% if not is_demo and not is_owner_preview %}
+    {% include "storefront/_pwa_head.html" %}
+    {% endif %}
+    <title>{% block title %}{{ store.name }} - {{ active_theme.name|default:"Storefront" }}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --brand-color: {{ brand_color|default:"#4f46e5" }};
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'storefront/shared.css' %}">
+    <link rel="stylesheet" href="{% static active_theme_css %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}bg-slate-50 text-slate-900 min-h-screen flex flex-col{% endblock %}" data-theme="{{ active_theme_key }}" data-template="{{ active_theme_key }}">
+    {% if is_demo %}
+    <div class="sf-demo-ribbon" data-sf="demo-ribbon">
+        <span>Demo preview &mdash; Exploring <strong>{{ active_theme.name }}</strong> theme with sample catalogue data. Ordering is disabled in demo mode.</span>
+    </div>
+    {% endif %}
+    {% if is_owner_preview %}
+    <div class="sf-preview-ribbon" data-sf="owner-preview-ribbon">
+        <span>Owner Preview Mode &mdash; Previewing <strong>{{ active_theme.name }}</strong> with your store ({{ store.name }}). Not saved yet.</span>
+        <a href="{% url 'dashboard:appearance' %}" class="ml-3 underline font-bold text-indigo-200 hover:text-white">&larr; Back to Appearance</a>
+    </div>
+    {% endif %}
+
+    {% include "storefront/partials/_account_links.html" %}
+    {% include "storefront/partials/_closed_banner.html" %}
+
+    {% block header %}{% endblock %}
+
+    <div class="flex-1">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block footer %}
+    <footer class="py-8 border-t border-slate-200/60 text-center text-xs opacity-75 mt-12">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>&copy; {{ store.name }} &bull; Powered by Theme <strong>{{ active_theme.name }}</strong></span>
+            <a href="{% url 'theme_gallery' %}" class="hover:underline">Browse Storefront Themes</a>
+        </div>
+    </footer>
+    {% endblock %}
+
+    {% if store.has_online_features and not is_demo and not is_owner_preview %}
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register(
+                "{% url 'storefront:pwa_sw' store.slug %}",
+                { scope: "{% url 'storefront:detail' store.slug %}" }
+            ).catch(function () {});
+        });
+    }
+    </script>
+    {% endif %}
+</body>
+</html>

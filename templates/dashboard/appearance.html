@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Storefront Appearance — {{ current_store.name }}{% endblock %}
+{% block content %}
+<div class="space-y-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-indigo-600">Storefront Customization</span>
+            <h1 class="text-2xl font-bold text-slate-900 mt-1">Appearance &amp; Theme</h1>
+            <p class="text-sm text-slate-600">
+                Active Theme: <strong class="text-slate-900">{{ active_theme.name }}</strong> &bull;
+                Your Plan: <strong class="text-indigo-600">{{ current_store.plan.name }}</strong>
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{% url 'theme_gallery' %}" target="_blank" class="px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50">
+                Public Theme Gallery &rarr;
+            </a>
+            <a href="{% url 'storefront:detail' current_store.slug %}" target="_blank" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700">
+                View Live Storefront &rarr;
+            </a>
+        </div>
+    </div>
+
+    {% if form.errors %}
+    <div class="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm space-y-1">
+        {% for error in form.non_field_errors %}
+        <p class="font-semibold">{{ error }}</p>
+        {% endfor %}
+        {% for field in form %}
+            {% for error in field.errors %}
+            <p><span class="font-semibold">{{ field.label }}:</span> {{ error }}</p>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'dashboard:appearance' %}" class="space-y-8">
+        {% csrf_token %}
+
+        <!-- Brand Color Picker -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900">Brand Accent Color</h2>
+                <p class="text-xs text-slate-500 mt-0.5">
+                    Used for buttons, badges, and PWA theme color (`#RRGGBB` format).
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <input type="text"
+                       name="theme_color"
+                       id="id_theme_color"
+                       value="{{ form.theme_color.value|default:current_store.theme_color }}"
+                       placeholder="#4f46e5"
+                       class="w-32 px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono">
+                <button type="submit" class="px-5 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700">
+                    Save Appearance
+                </button>
+            </div>
+        </div>
+
+        <!-- Theme Grid -->
+        <div>
+            <h2 class="text-lg font-bold text-slate-900 mb-4">Choose Storefront Theme</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for card in theme_cards %}
+                <div class="bg-white rounded-2xl border-2 {% if card.is_active %}border-indigo-600 ring-2 ring-indigo-600/20{% else %}border-slate-200{% endif %} shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="h-24 p-4 flex flex-col justify-between" style="background: linear-gradient(135deg, {{ card.theme.palette.0|default:'#4f46e5' }} 0%, {{ card.theme.palette.1|default:'#1e293b' }} 100%);">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-black/40 text-white">
+                                    {{ card.theme.min_plan|title }} Plan
+                                </span>
+                                {% if card.is_active %}
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500 text-white shadow">
+                                    Active
+                                </span>
+                                {% elif not card.allowed %}
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500 text-white shadow">
+                                    Requires {{ card.theme.min_plan|title }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                {% for color in card.theme.palette %}
+                                <span class="w-4 h-4 rounded-full border border-white" style="background-color: {{ color }};"></span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="p-5">
+                            <label class="flex items-start justify-between gap-3 cursor-pointer">
+                                <div>
+                                    <span class="text-base font-bold text-slate-900 block">{{ card.theme.name }}</span>
+                                    <p class="text-xs text-slate-600 mt-1">{{ card.theme.description }}</p>
+                                </div>
+                                <input type="radio"
+                                       name="template_key"
+                                       value="{{ card.theme.key }}"
+                                       {% if form.template_key.value == card.theme.key or not form.template_key.value and card.is_active %}checked{% endif %}
+                                       {% if not card.allowed %}disabled{% endif %}
+                                       class="mt-1 text-indigo-600 focus:ring-indigo-500">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="px-5 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs font-semibold">
+                        <a href="{% url 'dashboard:appearance_preview' card.theme.key %}"
+                           target="_blank"
+                           class="flex-1 text-center py-2 px-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">
+                            Preview with my products
+                        </a>
+                        {% if card.allowed %}
+                        <button type="submit"
+                                name="template_key"
+                                value="{{ card.theme.key }}"
+                                class="py-2 px-3 rounded-lg {% if card.is_active %}bg-emerald-600 text-white{% else %}bg-indigo-600 text-white hover:bg-indigo-700{% endif %}">
+                            {% if card.is_active %}Selected{% else %}Apply{% endif %}
+                        </button>
+                        {% else %}
+                        <span class="py-2 px-3 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed">
+                            Locked ({{ card.theme.min_plan|title }})
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

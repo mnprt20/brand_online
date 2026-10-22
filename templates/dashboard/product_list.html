@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Products</h1>
+    <a href="{% url 'dashboard:product_add' %}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">+ Add Product</a>
+</div>
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+            <tr>
+                <th class="px-6 py-3">Image</th>
+                <th class="px-6 py-3">Name</th>
+                <th class="px-6 py-3">Category</th>
+                <th class="px-6 py-3">Price</th>
+                <th class="px-6 py-3">Available</th>
+                <th class="px-6 py-3 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+            {% for product in products %}
+            <tr>
+                <td class="px-6 py-4">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-12 h-12 object-cover rounded">
+                    {% else %}
+                    <div class="w-12 h-12 bg-slate-100 rounded flex items-center justify-center text-xs text-slate-400">No Img</div>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 font-medium">
+                    <a href="{% url 'dashboard:product_detail' product.pk %}" class="hover:underline">{{ product.name }}</a>
+                </td>
+                <td class="px-6 py-4">{{ product.category.name|default:"—" }}</td>
+                <td class="px-6 py-4 font-semibold">{{ product.price }}</td>
+                <td class="px-6 py-4">
+                    {% if product.is_available %}
+                    <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs">Available</span>
+                    {% else %}
+                    <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-xs">Hidden</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 text-right space-x-3">
+                    <a href="{% url 'dashboard:product_edit' product.pk %}" class="text-indigo-600 hover:underline">Edit</a>
+                    <a href="{% url 'dashboard:product_delete' product.pk %}" class="text-red-600 hover:underline">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="px-6 py-8 text-center text-slate-500">No products yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Store Catalogue Platform{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+    <nav class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <a href="{% url 'dashboard:home' %}" class="text-xl font-bold text-indigo-600">
+                    {% if current_store %}{{ current_store.name }}{% else %}Catalogue SaaS{% endif %}
+                </a>
+                {% if user.is_authenticated %}
+                <div class="hidden md:flex items-center space-x-4 text-sm font-medium text-slate-600">
+                    <a href="{% url 'dashboard:home' %}" class="hover:text-indigo-600">Overview</a>
+                    {% if is_store_owner %}
+                    <a href="{% url 'dashboard:category_list' %}" class="hover:text-indigo-600">Categories</a>
+                    <a href="{% url 'dashboard:product_list' %}" class="hover:text-indigo-600">Products</a>
+                    <a href="{% url 'dashboard:order_list' %}" class="hover:text-indigo-600 inline-flex items-center gap-1.5">
+                        <span>Orders</span>
+                        <span id="nav-new-orders-badge" data-endpoint="{% url 'dashboard:orders_new_count' %}" class="hidden px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-red-600 text-white">0</span>
+                    </a>
+                    <a href="{% url 'dashboard:counter_order_add' %}" class="hover:text-indigo-600">+ Counter Order</a>
+                    {% if current_store and current_store.has_franchise_features %}
+                    <a href="{% url 'dashboard:staff_list' %}" class="hover:text-indigo-600">Staff</a>
+                    <a href="{% url 'dashboard:sales_report' %}" class="hover:text-indigo-600">Sales Report</a>
+                    {% endif %}
+                    <a href="{% url 'dashboard:payment_qr' %}" class="hover:text-indigo-600">Payment QR</a>
+                    <a href="{% url 'dashboard:appearance' %}" class="hover:text-indigo-600">Appearance</a>
+                    <a href="{% url 'dashboard:settings' %}" class="hover:text-indigo-600">Store Settings</a>
+                    {% elif is_store_staff %}
+                    <a href="{% url 'dashboard:order_list' %}" class="hover:text-indigo-600 inline-flex items-center gap-1.5">
+                        <span>My Orders</span>
+                        <span id="nav-new-orders-badge" data-endpoint="{% url 'dashboard:orders_new_count' %}" class="hidden px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-red-600 text-white">0</span>
+                    </a>
+                    <a href="{% url 'dashboard:counter_order_add' %}" class="hover:text-indigo-600">+ Counter Order</a>
+                    <a href="{% url 'dashboard:staff_catalog' %}" class="hover:text-indigo-600">Catalogue</a>
+                    {% if current_store and current_store.has_franchise_features %}
+                    <a href="{% url 'dashboard:my_qr' %}" class="hover:text-indigo-600">My QR</a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="flex items-center space-x-4 text-sm">
+                {% if user.is_authenticated %}
+                    {% if current_store %}
+                    <a href="/s/{{ current_store.slug }}/" target="_blank" class="text-indigo-600 hover:underline font-medium">View Storefront &rarr;</a>
+                    {% endif %}
+                    <span class="text-slate-500">
+                        {% if current_membership %}{{ current_membership.get_display_label }} ({{ current_membership.get_role_display }}){% else %}{{ user.username }}{% endif %}
+                    </span>
+                    <form method="post" action="{% url 'accounts:logout' %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="text-slate-700 hover:text-indigo-600">Login</a>
+                    <a href="{% url 'accounts:signup' %}" class="px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% if messages %}
+        <div class="mb-6 space-y-2">
+            {% for message in messages %}
+            <div class="p-4 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-800 text-sm">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {% if user.is_authenticated and current_store %}
+    <script>
+    (function () {
+        var badge = document.getElementById('nav-new-orders-badge');
+        if (!badge) return;
+        var endpoint = badge.getAttribute('data-endpoint');
+        function refreshNewOrderCount() {
+            fetch(endpoint, { credentials: 'same-origin' })
+                .then(function (res) { return res.ok ? res.json() : null; })
+                .then(function (data) {
+                    if (!data) return;
+                    var count = typeof data.new_count === 'number' ? data.new_count : (data.count || 0);
+                    badge.textContent = String(count);
+                    if (count > 0) {
+                        badge.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
+                    }
+                })
+                .catch(function () {});
+        }
+        refreshNewOrderCount();
+        setInterval(refreshNewOrderCount, 30000);
+    })();
+    </script>
+    {% endif %}
+</body>
+</html>

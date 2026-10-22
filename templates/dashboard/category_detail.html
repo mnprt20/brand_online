@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Category: {{ category.name }}{% endblock %}
+{% block content %}
+<div class="max-w-xl bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+    <h1 class="text-2xl font-bold mb-2">{{ category.name }}</h1>
+    <p class="text-sm text-slate-500 mb-6">Sort Order: {{ category.sort_order }}</p>
+    <div class="flex space-x-3">
+        <a href="{% url 'dashboard:category_edit' category.pk %}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm">Edit</a>
+        <a href="{% url 'dashboard:category_delete' category.pk %}" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm">Delete</a>
+        <a href="{% url 'dashboard:category_list' %}" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm">Back</a>
+    </div>
+</div>
+{% endblock %}

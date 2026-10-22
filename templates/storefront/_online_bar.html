@@ -1,0 +1,44 @@
+{% if store.has_online_features %}
+<div class="bg-slate-900 text-white text-xs py-2.5 px-4 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center space-x-3">
+            <span class="px-2 py-0.5 rounded font-semibold {% if store.online_ordering_open %}bg-emerald-500/20 text-emerald-300 border border-emerald-500/30{% else %}bg-amber-500/20 text-amber-300 border border-amber-500/30{% endif %}">
+                {% if store.online_ordering_open %}Online Ordering Open{% else %}Online Ordering Closed{% endif %}
+            </span>
+            {% if store.minimum_order_amount and store.minimum_order_amount > 0 %}
+            <span class="text-slate-300">Min. Order: {{ store.minimum_order_amount }}</span>
+            {% endif %}
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'storefront:online_checkout' store.slug %}" class="text-emerald-300 hover:underline font-semibold">Online Checkout</a>
+            {% if current_customer %}
+            <span class="text-slate-300">Hi, <strong class="text-white">{{ current_customer.name }}</strong></span>
+            <a href="{% url 'storefront:customer_order_list' store.slug %}" class="text-indigo-300 hover:underline font-medium">My Orders</a>
+            <a href="{% url 'storefront:customer_account' store.slug %}" class="text-indigo-300 hover:underline font-medium">My Account</a>
+            <form method="post" action="{% url 'storefront:customer_logout' store.slug %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="text-slate-300 hover:text-white underline">Logout</button>
+            </form>
+            {% else %}
+            <a href="{% url 'storefront:customer_login' store.slug %}" class="text-white hover:underline font-medium">Customer Login</a>
+            <a href="{% url 'storefront:customer_register' store.slug %}" class="px-2.5 py-1 rounded bg-indigo-600 text-white hover:bg-indigo-500 font-medium">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% if not store.online_ordering_open %}
+<div class="bg-amber-100 border-b border-amber-300 text-amber-900 px-4 py-2.5 text-center text-sm font-medium" data-banner="ordering-closed">
+    Online ordering is currently closed for {{ store.name }}. You can still browse the catalogue.
+</div>
+{% endif %}
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register(
+            "{% url 'storefront:pwa_sw' store.slug %}",
+            { scope: "{% url 'storefront:detail' store.slug %}" }
+        ).catch(function () {});
+    });
+}
+</script>
+{% endif %}

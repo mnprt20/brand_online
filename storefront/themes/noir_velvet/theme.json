@@ -1,0 +1,11 @@
+{
+  "key": "noir_velvet",
+  "name": "Noir Velvet",
+  "description": "Obsidian luxury layout with champagne-gold accents and fine editorial typography for online boutiques.",
+  "version": 1,
+  "tags": ["luxury", "boutique", "dark", "editorial"],
+  "min_plan": "online",
+  "palette": ["#ca8a04", "#0c0a09", "#1c1917", "#fafaf9"],
+  "default_brand_color": "#ca8a04",
+  "original_font": "Cormorant Garamond"
+}

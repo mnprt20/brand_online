@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Add Staff Member{% endblock %}
+{% block content %}
+<div class="max-w-xl bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+    <h1 class="text-2xl font-bold mb-2">Add Staff Member</h1>
+    <p class="text-sm text-slate-500 mb-6">
+        Active Seats: {{ current_store.active_seat_count }} / {{ current_store.seat_limit }}
+    </p>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="p-3 rounded bg-red-50 border border-red-200 text-sm text-red-700">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+        {% for field in form %}
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+            <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <div class="flex space-x-3 pt-2">
+            <button type="submit" class="px-5 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+                Create Staff Account
+            </button>
+            <a href="{% url 'dashboard:staff_list' %}" class="px-5 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

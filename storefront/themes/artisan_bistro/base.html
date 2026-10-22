@@ -1,0 +1,23 @@
+{% extends "storefront/base_shell.html" %}
+{% block body_class %}min-h-screen flex flex-col bistro-theme-body{% endblock %}
+{% block header %}
+<header class="bistro-header py-10 border-b border-orange-200/80">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+            {% if store.logo %}
+            <img src="{{ store.logo.url }}" alt="{{ store.name }}" class="w-16 h-16 rounded-2xl object-cover border-2 border-orange-300 shadow-sm">
+            {% endif %}
+            <div>
+                <span class="text-xs uppercase tracking-widest font-bold bistro-eyebrow">Artisan Bistro &amp; Kitchen</span>
+                <h1 class="text-3xl sm:text-4xl font-serif font-bold tracking-tight mt-0.5">
+                    <a href="{% url 'storefront:detail' store.slug %}">{{ store.name }}</a>
+                </h1>
+                {% if store.description %}
+                <p class="text-sm opacity-80 mt-1 max-w-xl">{{ store.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% include "storefront/partials/_cart_link.html" with label="Table Order" link_class="px-5 py-2.5 rounded-full text-sm font-bold sf-brand-bg shadow-sm" %}
+    </div>
+</header>
+{% endblock %}

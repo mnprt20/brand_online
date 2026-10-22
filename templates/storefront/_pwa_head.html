@@ -1,0 +1,5 @@
+{% if store.has_online_features %}
+<link rel="manifest" href="{% url 'storefront:pwa_manifest' store.slug %}">
+<meta name="theme-color" content="{{ store.theme_color|default:'#4f46e5' }}">
+<link rel="apple-touch-icon" href="{% url 'storefront:pwa_icon_192' store.slug %}">
+{% endif %}

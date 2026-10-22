@@ -1,0 +1,23 @@
+{% extends "storefront/base_shell.html" %}
+{% block body_class %}min-h-screen flex flex-col verdant-theme-body{% endblock %}
+{% block header %}
+<header class="verdant-header py-9 border-b border-emerald-200/80">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+            {% if store.logo %}
+            <img src="{{ store.logo.url }}" alt="{{ store.name }}" class="w-16 h-16 rounded-2xl object-cover border-2 border-emerald-400">
+            {% endif %}
+            <div>
+                <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] uppercase tracking-wider font-bold bg-emerald-100 text-emerald-800">Fresh &amp; Organic</span>
+                <h1 class="text-3xl font-extrabold tracking-tight text-emerald-950 mt-1">
+                    <a href="{% url 'storefront:detail' store.slug %}">{{ store.name }}</a>
+                </h1>
+                {% if store.description %}
+                <p class="text-sm text-emerald-800/80 mt-1">{{ store.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% include "storefront/partials/_cart_link.html" with label="Basket" link_class="px-5 py-2.5 rounded-xl text-sm font-bold sf-brand-bg shadow-sm" %}
+    </div>
+</header>
+{% endblock %}
